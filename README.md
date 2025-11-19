@@ -75,13 +75,6 @@ Beautiful grid layout with categorized lofi stations, search bar, and category f
 
 ---
 
-### 🔍 Search & Categories
-Advanced search functionality with instant results and category-based filtering.
-
-![Search](https://via.placeholder.com/300x600/059669/ffffff?text=Search+Page)
-
----
-
 ### 🎵 Station Detail Page
 **Comprehensive station view featuring:**
 - 🎵 **Audio Information** - bitrate, format, duration
