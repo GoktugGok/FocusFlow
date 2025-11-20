@@ -46,7 +46,6 @@ FocusFlow is a comprehensive lofi music and productivity application developed u
 - **⚛️ React 18** with Hooks and Context API
 - **🎨 Bootstrap 5** + **Tailwind CSS** for responsive UI
 - **🛣️ React Router** for navigation
-- **🎵 Howler.js** for audio management
 - **⚡ Vite** for fast development
 - **📡 Socket.io Client** for real-time features
 
