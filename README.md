@@ -75,6 +75,9 @@ Beautiful grid layout with categorized lofi stations, search bar, and category f
 ---
 
 ### 🎵 Station Detail Page
+
+![Detail Page](screenshot/details-gif.gif)
+
 **Comprehensive station view featuring:**
 - 🎵 **Audio Information** - bitrate, format, duration
 - ⏰ **Pomodoro Timer** - customizable work/break intervals
@@ -82,8 +85,6 @@ Beautiful grid layout with categorized lofi stations, search bar, and category f
 - 🎨 **Live Background** - dynamic visualizer
 - 🔊 **Sound Controls** - music and ambient mixers
 - 👥 **User List** - see who's listening
-
-![Detail Page](screenshot/details-gif.gif)
 
 ---
 
@@ -94,18 +95,13 @@ Advanced timer with:
 - 🔔 Break notifications
 - 📈 Statistics overview
 
-![Pomodoro](https://via.placeholder.com/300x600/dc2626/ffffff?text=Pomodoro+Timer)
-
 ---
-
 ### 💬 Live Chat System
 Real-time group chat features:
 - 👥 User presence indicators
 - 💬 Instant messaging
 - 🔔 Message notifications
 - 🏠 Multiple room support
-
-![Chat](https://via.placeholder.com/300x600/ea580c/ffffff?text=Live+Chat)
 
 ---
 
