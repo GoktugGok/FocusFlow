@@ -86,8 +86,6 @@ Beautiful grid layout with categorized lofi stations, search bar, and category f
 - 🔊 **Sound Controls** - music and ambient mixers
 - 👥 **User List** - see who's listening
 
----
-
 ### ⏰ Pomodoro Timer
 Advanced timer with:
 - ⏱️ Customizable intervals (25/5, 50/10, custom)
@@ -95,7 +93,6 @@ Advanced timer with:
 - 🔔 Break notifications
 - 📈 Statistics overview
 
----
 ### 💬 Live Chat System
 Real-time group chat features:
 - 👥 User presence indicators
