@@ -83,7 +83,7 @@ Beautiful grid layout with categorized lofi stations, search bar, and category f
 - 🔊 **Sound Controls** - music and ambient mixers
 - 👥 **User List** - see who's listening
 
-![Detail Page](screenshots/details-gif.gif)
+![Detail Page](screenshot/details-gif.gif)
 
 ---
 
