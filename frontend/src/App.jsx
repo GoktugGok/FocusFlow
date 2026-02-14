@@ -7,7 +7,7 @@ import Home from "./pages/Home.jsx";
 import LofiDetail from "./pages/LofiDetail.jsx";
 import LoginPage from "./pages/Login.jsx";
 
-const socket = io("http://localhost:3000");
+const socket = io("https://focusflow-7znc.onrender.com");
 
 export default function App() {
   useEffect(() => {

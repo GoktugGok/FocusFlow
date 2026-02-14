@@ -25,7 +25,7 @@ const PORT = 3000;
 
 app.use(express.json());
 connectDB();
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "focus-flow-ruddy-two.vercel.app" }));
 app.use("/api/users", userRouter);
 
 // Bütün lofi routes’e io ekleyelim
