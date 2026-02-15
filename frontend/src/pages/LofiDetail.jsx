@@ -186,7 +186,7 @@ export default function LofiDetail() {
               opts={{
                 playerVars: {
                   autoplay: 1,
-                  mute:1,
+                  mute:0,
                   controls: 0,
                   modestbranding: 1,
                   loop: 1,
