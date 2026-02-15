@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "focus-flow-ruddy-two.vercel.app",
+    origin: "https://focus-flow-ruddy-two.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
@@ -25,7 +25,7 @@ const PORT = 3000;
 
 app.use(express.json());
 connectDB();
-app.use(cors({ origin: "focus-flow-ruddy-two.vercel.app" }));
+app.use(cors({ origin: "https://focus-flow-ruddy-two.vercel.app" }));
 app.use("/api/users", userRouter);
 
 // Bütün lofi routes’e io ekleyelim
