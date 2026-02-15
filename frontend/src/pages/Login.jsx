@@ -18,7 +18,7 @@ export default function AuthPage({ onLogin }) {
     setIsLoading(true);
 
     try {
-        const res = await fetch(`${API}users/login`, {
+        const res = await fetch(`https://focusflow-7znc.onrender.com/users/login`, {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({
@@ -57,7 +57,7 @@ export default function AuthPage({ onLogin }) {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API}users/register`, {
+      const res = await fetch("https://focusflow-7znc.onrender.com/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

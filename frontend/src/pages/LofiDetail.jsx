@@ -59,7 +59,7 @@ export default function LofiDetail() {
   
   // FETCH LOFI DATA
   useEffect(() => {
-    fetch(`${API}lofis/${id}`)
+    fetch(`https://focusflow-7znc.onrender.com/lofis/${id}`)
       .then((res) => res.json())
       .then((data) => setLofi(data))
       .catch((err) => console.log(err));
