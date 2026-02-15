@@ -101,7 +101,7 @@ export default function TimerPanel({ panelOpen, onClose }) {
             }
             return prev - 1;
           });
-        }, 100);
+        }, 1000);
       }
     }
     const reset = () => {
