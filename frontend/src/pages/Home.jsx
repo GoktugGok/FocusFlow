@@ -21,7 +21,7 @@ export default function Home() {
     if(!token) return;
 
     try{
-        const response = await fetch('http://localhost:3000/api/users/me',{
+        const response = await fetch(`${API}/api/users/me`,{
           headers:{
             'Authorization':`Bearer ${token}`
           }

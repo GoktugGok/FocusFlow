@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:3000");
+const socket = io(`${API}`);
 
 // ✅ YouTube URL'sinden Video ID çıkarma fonksiyonu
 const getYouTubeVideoId = (url) => {
@@ -36,7 +36,7 @@ export default function LofiList(){
     const [lofies, setLofies] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:3000/lofis")
+        fetch(`${API}/lofis`)
         .then((res) => res.json())
         .then((data) => setLofies(data))
         .catch((err) => console.log(err));

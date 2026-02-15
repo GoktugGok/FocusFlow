@@ -18,7 +18,7 @@ export default function AuthPage({ onLogin }) {
     setIsLoading(true);
 
     try {
-        const res = await fetch("http://localhost:3000/api/users/login", {
+        const res = await fetch(`${API}users/login`, {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({
@@ -57,7 +57,7 @@ export default function AuthPage({ onLogin }) {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/api/users/register", {
+      const res = await fetch(`${API}users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

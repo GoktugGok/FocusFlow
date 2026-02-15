@@ -59,7 +59,7 @@ export default function LofiDetail() {
   
   // FETCH LOFI DATA
   useEffect(() => {
-    fetch(`http://localhost:3000/lofis/${id}`)
+    fetch(`${API}lofis/${id}`)
       .then((res) => res.json())
       .then((data) => setLofi(data))
       .catch((err) => console.log(err));
