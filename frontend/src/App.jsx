@@ -8,7 +8,7 @@ import LofiDetail from "./pages/LofiDetail.jsx";
 import LoginPage from "./pages/Login.jsx";
 
 const API = import.meta.env.VITE_API_URL;
-const socket = io({API});
+const socket = io(API);
 
 export default function App() {
   useEffect(() => {
