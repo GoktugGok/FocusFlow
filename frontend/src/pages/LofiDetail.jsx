@@ -157,6 +157,8 @@ export default function LofiDetail() {
   const handleYouTubeReady = (event) => {
     try {
       youtubePlayerRef.current = event.target;
+      event.target.mute();
+      event.target.playVideo();
       setIsYouTubeReady(true);
       event.target.setVolume(youtubeVolume);
       if (youtubeVolume === 0 || youtubeMuted) {
@@ -186,7 +188,7 @@ export default function LofiDetail() {
               opts={{
                 playerVars: {
                   autoplay: 1,
-                  mute:0,
+                  mute:1,
                   controls: 0,
                   modestbranding: 1,
                   loop: 1,
