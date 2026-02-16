@@ -155,14 +155,21 @@ export default function LofiDetail() {
 
   // YOUTUBE READY
   const handleYouTubeReady = (event) => {
-  youtubePlayerRef.current = event.target;
+  try {
+    youtubePlayerRef.current = event.target;
 
-  event.target.mute();          // Her zaman muted başla
-  event.target.playVideo();     // Autoplay garanti
+    // Autoplay için muted başlat
+    event.target.mute();
+    event.target.playVideo();
 
-  setIsYouTubeReady(true);
+    setIsYouTubeReady(true);
 
-  event.target.setVolume(youtubeVolume);
+    // Volume ayarla ama burada unMute yapma
+    event.target.setVolume(youtubeVolume);
+
+  } catch (error) {
+    console.log("Error initializing YouTube player:", error);
+  }
 };
 
 
@@ -183,6 +190,7 @@ export default function LofiDetail() {
               opts={{
                 playerVars: {
                   autoplay: 1,
+                  mute:1,
                   controls: 0,
                   modestbranding: 1,
                   loop: 1,
