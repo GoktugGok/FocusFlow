@@ -155,23 +155,24 @@ export default function LofiDetail() {
 
   // YOUTUBE READY
   const handleYouTubeReady = (event) => {
-  try {
-    youtubePlayerRef.current = event.target;
-
-    // Autoplay için muted başlat
-    event.target.mute();
-    event.target.playVideo();
-
-    setIsYouTubeReady(true);
-
-    // Volume ayarla ama burada unMute yapma
-    event.target.setVolume(youtubeVolume);
-
-  } catch (error) {
-    console.log("Error initializing YouTube player:", error);
-  }
-};
-
+    try {
+      youtubePlayerRef.current = event.target;
+      event.target.mute();
+      event.target.playVideo();
+      setIsYouTubeReady(true);
+      setTimeout(() => {
+        event.target.playVideo();
+      }, 100);
+      event.target.setVolume(youtubeVolume);
+      if (youtubeVolume === 0 || youtubeMuted) {
+        event.target.mute();
+      } else {
+        event.target.unMute();
+      }
+    } catch (error) {
+      console.log("Error initializing YouTube player:", error);
+    }
+  };
 
   // RENDER
   if (!lofi) return <div>Loading...</div>;
