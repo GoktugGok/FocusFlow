@@ -83,7 +83,7 @@ export default function LofiDetail() {
     if (lofi?.audioUrl && audioRef.current) {
       audioRef.current.volume = audioVolume / 100;
       setAudioMuted(audioVolume === 0)
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(err => console.log(err));
     }
     localStorage.setItem("audioVolume", audioVolume);
     
@@ -234,7 +234,7 @@ export default function LofiDetail() {
             onCanPlay={() => {
               if (audioRef.current) {
                 audioRef.current.volume = audioVolume / 100;
-                audioRef.current.play().catch(() => {});
+                audioRef.current.play().catch(err => console.log(err));
               }
             }}
           >
