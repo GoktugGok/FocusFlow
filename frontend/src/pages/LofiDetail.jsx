@@ -41,6 +41,7 @@ export default function LofiDetail() {
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
   const [isYouTubeReady, setIsYouTubeReady] = useState(false);
   const [userInteraction, setUserInteraction] = useState(false);
+  const [isSafari, setIsSafari] = useState(false);
 
   const audioRef = useRef(null);
   const rainAudioRef = useRef(null);
@@ -53,6 +54,12 @@ export default function LofiDetail() {
   const [streetMuted, setStreetMuted] = useState(() => JSON.parse(localStorage.getItem("streetMuted")) || false);
   const [rainMuted, setRainMuted] = useState(() => JSON.parse(localStorage.getItem("rainMuted")) || false);
   const [cafeMuted, setCafeMuted] = useState(() => JSON.parse(localStorage.getItem("cafeMuted")) || false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(ua);
+    setIsSafari(isSafariBrowser);
+  }, []);
 
   const getYouTubeId = (url) => {
     if (!url) return null;
@@ -139,6 +146,9 @@ export default function LofiDetail() {
       if (cafeAudioRef.current && cafeVolume > 0) {
         cafeAudioRef.current.play().catch(() => {});
       }
+      if (youtubePlayerRef.current && isSafari) {
+        youtubePlayerRef.current.playVideo().catch(() => {});
+      }
     }
   };
 
@@ -167,7 +177,9 @@ export default function LofiDetail() {
     try {
       youtubePlayerRef.current = event.target;
       event.target.mute();
-      event.target.playVideo();
+      if (!isSafari) {
+        event.target.playVideo();
+      }
       setIsYouTubeReady(true);
       event.target.setVolume(youtubeVolume);
       if (youtubeVolume === 0 || youtubeMuted) {
@@ -198,8 +210,8 @@ export default function LofiDetail() {
               videoId={videoId}
               opts={{
                 playerVars: {
-                  autoplay: 1,
-                  mute:1,
+                  autoplay: isSafari ? 0 : 1,
+                  mute: 1,
                   controls: 0,
                   modestbranding: 1,
                   loop: 1,
