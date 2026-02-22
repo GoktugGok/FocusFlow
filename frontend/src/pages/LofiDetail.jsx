@@ -160,9 +160,6 @@ export default function LofiDetail() {
       event.target.mute();
       event.target.playVideo();
       setIsYouTubeReady(true);
-      setTimeout(() => {
-        event.target.playVideo();
-      }, 100);
       event.target.setVolume(youtubeVolume);
       if (youtubeVolume === 0 || youtubeMuted) {
         event.target.mute();

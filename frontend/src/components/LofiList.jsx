@@ -32,7 +32,7 @@ const getCoverImage = (lofi) => {
   return "/default-cover.jpg";
 };
 
-export default function LofiList(){
+export default function LofiList({ search, category }){  // ✅ 1. category prop'u zaten var
     const [lofies, setLofies] = useState([]);
 
     useEffect(() => {
@@ -57,9 +57,24 @@ export default function LofiList(){
         return () => socket.off(); 
     }, []);
 
+    // ✅ 2. YENİ: Filtrelenmiş liste
+    const filteredLofies = lofies.filter(lofi => {
+        // Arama filtresi
+        if (search && !lofi.title?.toLowerCase().includes(search.toLowerCase())) {
+            return false;
+        }
+        
+        // Kategori filtresi (All değilse)
+        if (category && category !== "All" && lofi.category !== category) {
+            return false;
+        }
+        
+        return true;
+    });
+
     return(
         <main className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {lofies.map((lofi) => {
+          {filteredLofies.map((lofi) => {  // ✅ 3. lofies yerine filteredLofies kullan
             const coverImage = getCoverImage(lofi);
             
             return (
