@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { FaVolumeHigh } from "react-icons/fa6";
 import { TfiTimer } from "react-icons/tfi";
-import {MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import rainSound from '../assets/audio/rain-sound.mp3';
 import cafeSound from '../assets/audio/cafe-sound.mp3';
 import streetSound from '../assets/audio/street-sound.mp3';
@@ -12,11 +12,9 @@ import TimerPanel from "../components/TimerPanel";
 import ChatWindow from "../components/ChatPanel";
 
 export default function LofiDetail() {
-  // ROUTER PARAMS
   const { id } = useParams();
   const [lofi, setLofi] = useState(null);
 
-  // STATE: Volume
   const [audioVolume, setAudioVolume] = useState(() => {
     const saved = localStorage.getItem("audioVolume");
     return saved !== null ? Number(saved) : 10; 
@@ -38,37 +36,30 @@ export default function LofiDetail() {
     return saved !== null ? Number(saved) : 0;
   });
 
-  // STATE: Panel & YouTube
   const [panelOpen, setPanelOpen] = useState(false);
   const [timerPanelOpen, setTimerPanelOpen] = useState(false);
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
   const [isYouTubeReady, setIsYouTubeReady] = useState(false);
-  
-  // 🆕 Safari için eklenecek tek state
   const [userInteraction, setUserInteraction] = useState(false);
 
-  // REFS
   const audioRef = useRef(null);
   const rainAudioRef = useRef(null);
   const cafeAudioRef = useRef(null);
   const streetAudioRef = useRef(null);
   const youtubePlayerRef = useRef(null);
 
-  // STATE: Muted
   const [audioMuted, setAudioMuted] = useState(() => JSON.parse(localStorage.getItem("audioMuted")) || false);
   const [youtubeMuted, setYoutubeMuted] = useState(() => JSON.parse(localStorage.getItem("youtubeMuted")) || false);
   const [streetMuted, setStreetMuted] = useState(() => JSON.parse(localStorage.getItem("streetMuted")) || false);
   const [rainMuted, setRainMuted] = useState(() => JSON.parse(localStorage.getItem("rainMuted")) || false);
   const [cafeMuted, setCafeMuted] = useState(() => JSON.parse(localStorage.getItem("cafeMuted")) || false);
 
-  // HELPERS
   const getYouTubeId = (url) => {
     if (!url) return null;
     const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
     return match ? match[1] : null;
   };
   
-  // FETCH LOFI DATA
   useEffect(() => {
     fetch(`https://focusflow-7znc.onrender.com/lofis/${id}`)
       .then((res) => res.json())
@@ -76,7 +67,6 @@ export default function LofiDetail() {
       .catch((err) => console.log(err));
   }, [id]);
 
-  // 🆕 YouTube API yükleme (ilk kodundaki gibi)
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");
@@ -86,12 +76,10 @@ export default function LofiDetail() {
     }
 
     window.onYouTubeIframeAPIReady = () => {
-      console.log("✅ YouTube API ready!");
       setIsYouTubeReady(true);
     };
   }, []);
 
-  // VOLUME EFFECTS (ilk kodundaki gibi)
   useEffect(() => {
     if (lofi?.audioUrl && audioRef.current) {
       audioRef.current.volume = audioVolume / 100;
@@ -106,7 +94,7 @@ export default function LofiDetail() {
         youtubePlayerRef.current.setVolume(youtubeVolume);
         setYoutubeMuted(youtubeVolume === 0);
       } catch (error) {
-        console.log("YouTube player not ready yet:", error);
+        console.log(error);
       }
     }
     localStorage.setItem("youtubeVolume", youtubeVolume);
@@ -136,12 +124,9 @@ export default function LofiDetail() {
     localStorage.setItem("cafeVolume", cafeVolume);
   }, [cafeVolume]);
 
-  // 🆕 Safari için kullanıcı etkileşimi
   const handleUserInteraction = () => {
     if (!userInteraction) {
       setUserInteraction(true);
-      
-      // Tüm sesleri başlat
       if (audioRef.current && audioVolume > 0) {
         audioRef.current.play().catch(() => {});
       }
@@ -157,32 +142,27 @@ export default function LofiDetail() {
     }
   };
 
-  // PANEL
   const handleTogglePanel = () => setPanelOpen(!panelOpen);
 
-  // VOLUME CHANGE (ilk kodundaki gibi)
   const handleVolumeChange = (ref, val, setVol, setMuted, storageKey) => {
     setVol(val);
-    if (storageKey) {
-        localStorage.setItem(storageKey, val.toString());
-    }
-    if(val === 0){
-        setMuted(true);
-        if (ref?.current && !ref.current.getVolume) { 
-            ref.current.pause();
-        }
+    localStorage.setItem(storageKey, val.toString());
+    if (val === 0) {
+      setMuted(true);
+      if (ref?.current && !ref.current.getVolume) { 
+        ref.current.pause();
+      }
     } else {
-        setMuted(false);
-        if(ref?.current){
-            ref.current.volume = val / 100;
-            if (!ref.current.getVolume) { 
-                ref.current.play().catch(() => {});
-            }
+      setMuted(false);
+      if (ref?.current) {
+        ref.current.volume = val / 100;
+        if (!ref.current.getVolume && userInteraction) { 
+          ref.current.play().catch(() => {});
         }
+      }
     }
   };
 
-  // YOUTUBE READY (ilk kodundaki gibi)
   const handleYouTubeReady = (event) => {
     try {
       youtubePlayerRef.current = event.target;
@@ -196,11 +176,10 @@ export default function LofiDetail() {
         event.target.unMute();
       }
     } catch (error) {
-      console.log("Error initializing YouTube player:", error);
+      console.log(error);
     }
   };
 
-  // RENDER
   if (!lofi) return <div>Loading...</div>;
 
   const isYouTubeVideo = !!lofi.videoUrl;
@@ -209,7 +188,6 @@ export default function LofiDetail() {
   return (
     <main 
       className="relative w-full h-screen bg-gray-900 overflow-hidden"
-      // 🆕 Safari için tıklama yakalama
       onClick={handleUserInteraction}
       onTouchStart={handleUserInteraction}
     >
@@ -230,7 +208,7 @@ export default function LofiDetail() {
                 },
               }}
               onReady={handleYouTubeReady}
-              onError={(e) => console.log("YouTube player error:", e)}
+              onError={(e) => console.log(e)}
               className="w-full h-full object-cover"
               iframeClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto"
             />
@@ -273,14 +251,11 @@ export default function LofiDetail() {
         )}
         <audio 
           ref={rainAudioRef} 
-          autoPlay 
           loop
-          type="audio/mp3"
           muted={rainMuted}
           onCanPlay={() => {
             if(rainAudioRef.current){
               rainAudioRef.current.volume = rainVolume / 100;
-              rainAudioRef.current.play().catch(() => {})
             }
           }}
         >
@@ -288,14 +263,11 @@ export default function LofiDetail() {
         </audio>
         <audio 
           ref={streetAudioRef} 
-          autoPlay 
           loop
-          type="audio/mp3"
           muted={streetMuted}
           onCanPlay={() => {
             if(streetAudioRef.current){
               streetAudioRef.current.volume = streetVolume / 100;
-              streetAudioRef.current.play().catch(() => {})
             }
           }}
         >
@@ -303,14 +275,11 @@ export default function LofiDetail() {
         </audio>
         <audio 
           ref={cafeAudioRef} 
-          autoPlay 
           loop
-          type="audio/mp3"
           muted={cafeMuted}
           onCanPlay={() => {
             if(cafeAudioRef.current){
               cafeAudioRef.current.volume = cafeVolume / 100;
-              cafeAudioRef.current.play().catch(() => {})
             }
           }}
         >
