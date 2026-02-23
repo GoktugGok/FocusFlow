@@ -17,7 +17,7 @@ export default function LofiDetail() {
 
   const [audioVolume, setAudioVolume] = useState(() => {
     const saved = localStorage.getItem("audioVolume");
-    return saved !== null ? Number(saved) : 10; 
+    return saved !== null ? Number(saved) : 10;
   });
   const [youtubeVolume, setYoutubeVolume] = useState(() => {
     const saved = localStorage.getItem("youtubeVolume");
@@ -43,6 +43,26 @@ export default function LofiDetail() {
   const [userInteraction, setUserInteraction] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
 
+  // Landscape detection for mobile
+  const [isLandscape, setIsLandscape] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkOrientation = () => {
+      const mobile = window.innerWidth < 1024;
+      const landscape = window.innerWidth > window.innerHeight;
+      setIsMobile(mobile);
+      setIsLandscape(mobile && landscape);
+    };
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("orientationchange", checkOrientation);
+    return () => {
+      window.removeEventListener("resize", checkOrientation);
+      window.removeEventListener("orientationchange", checkOrientation);
+    };
+  }, []);
+
   const audioRef = useRef(null);
   const rainAudioRef = useRef(null);
   const cafeAudioRef = useRef(null);
@@ -66,7 +86,7 @@ export default function LofiDetail() {
     const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
     return match ? match[1] : null;
   };
-  
+
   useEffect(() => {
     fetch(`https://focusflow-7znc.onrender.com/lofis/${id}`)
       .then((res) => res.json())
@@ -81,10 +101,7 @@ export default function LofiDetail() {
       const firstScriptTag = document.getElementsByTagName("script")[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
-
-    window.onYouTubeIframeAPIReady = () => {
-      setIsYouTubeReady(true);
-    };
+    window.onYouTubeIframeAPIReady = () => { setIsYouTubeReady(true); };
   }, []);
 
   useEffect(() => {
@@ -97,78 +114,74 @@ export default function LofiDetail() {
 
   useEffect(() => {
     if (lofi?.videoUrl && youtubePlayerRef.current && isYouTubeReady) {
-      try {
-        youtubePlayerRef.current.setVolume(youtubeVolume);
-        setYoutubeMuted(youtubeVolume === 0);
-      } catch (error) {
-        console.log(error);
-      }
+      try { youtubePlayerRef.current.setVolume(youtubeVolume); setYoutubeMuted(youtubeVolume === 0); }
+      catch (error) { console.log(error); }
     }
     localStorage.setItem("youtubeVolume", youtubeVolume);
   }, [youtubeVolume, lofi, isYouTubeReady]);
 
   useEffect(() => {
-    if (rainAudioRef.current) {
-      rainAudioRef.current.volume = rainVolume / 100;
-      setRainMuted(rainVolume === 0);
-    }
+    if (rainAudioRef.current) { rainAudioRef.current.volume = rainVolume / 100; setRainMuted(rainVolume === 0); }
     localStorage.setItem("rainVolume", rainVolume);
   }, [rainVolume]);
 
   useEffect(() => {
-    if (streetAudioRef.current) {
-      streetAudioRef.current.volume = streetVolume / 100;
-      setStreetMuted(streetVolume === 0);
-    }
+    if (streetAudioRef.current) { streetAudioRef.current.volume = streetVolume / 100; setStreetMuted(streetVolume === 0); }
     localStorage.setItem("streetVolume", streetVolume);
   }, [streetVolume]);
 
   useEffect(() => {
-    if (cafeAudioRef.current) {
-      cafeAudioRef.current.volume = cafeVolume / 100;
-      setCafeMuted(cafeVolume === 0);
-    }
+    if (cafeAudioRef.current) { cafeAudioRef.current.volume = cafeVolume / 100; setCafeMuted(cafeVolume === 0); }
     localStorage.setItem("cafeVolume", cafeVolume);
   }, [cafeVolume]);
 
   const handleUserInteraction = () => {
     if (!userInteraction) {
       setUserInteraction(true);
-      if (audioRef.current && audioVolume > 0) {
-        audioRef.current.play().catch(() => {});
-      }
-      if (rainAudioRef.current && rainVolume > 0) {
-        rainAudioRef.current.play().catch(() => {});
-      }
-      if (streetAudioRef.current && streetVolume > 0) {
-        streetAudioRef.current.play().catch(() => {});
-      }
-      if (cafeAudioRef.current && cafeVolume > 0) {
-        cafeAudioRef.current.play().catch(() => {});
-      }
-      if (youtubePlayerRef.current && isSafari) {
-        youtubePlayerRef.current.playVideo().catch(() => {});
-      }
+      if (audioRef.current && audioVolume > 0) audioRef.current.play().catch(() => { });
+      if (rainAudioRef.current && rainVolume > 0) rainAudioRef.current.play().catch(() => { });
+      if (streetAudioRef.current && streetVolume > 0) streetAudioRef.current.play().catch(() => { });
+      if (cafeAudioRef.current && cafeVolume > 0) cafeAudioRef.current.play().catch(() => { });
+      if (youtubePlayerRef.current && isSafari) youtubePlayerRef.current.playVideo().catch(() => { });
     }
   };
 
-  const handleTogglePanel = () => setPanelOpen(!panelOpen);
+  const handleTogglePanel = () => {
+    // Sadece bir panel aynı anda açık olsun (mobilde)
+    if (isMobile) {
+      setTimerPanelOpen(false);
+      setChatPanelOpen(false);
+    }
+    setPanelOpen(!panelOpen);
+  };
+
+  const handleToggleTimer = () => {
+    if (isMobile) {
+      setPanelOpen(false);
+      setChatPanelOpen(false);
+    }
+    setTimerPanelOpen(!timerPanelOpen);
+  };
+
+  const handleToggleChat = () => {
+    if (isMobile) {
+      setPanelOpen(false);
+      setTimerPanelOpen(false);
+    }
+    setChatPanelOpen(!chatPanelOpen);
+  };
 
   const handleVolumeChange = (ref, val, setVol, setMuted, storageKey) => {
     setVol(val);
-    localStorage.setItem(storageKey, val.toString());
+    if (storageKey) localStorage.setItem(storageKey, val.toString());
     if (val === 0) {
       setMuted(true);
-      if (ref?.current && !ref.current.getVolume) { 
-        ref.current.pause();
-      }
+      if (ref?.current && !ref.current.getVolume) ref.current.pause();
     } else {
       setMuted(false);
       if (ref?.current) {
         ref.current.volume = val / 100;
-        if (!ref.current.getVolume && userInteraction) { 
-          ref.current.play().catch(() => {});
-        }
+        if (!ref.current.getVolume && userInteraction) ref.current.play().catch(() => { });
       }
     }
   };
@@ -177,32 +190,30 @@ export default function LofiDetail() {
     try {
       youtubePlayerRef.current = event.target;
       event.target.mute();
-      if (!isSafari) {
-        event.target.playVideo();
-      }
+      if (!isSafari) event.target.playVideo();
       setIsYouTubeReady(true);
       event.target.setVolume(youtubeVolume);
-      if (youtubeVolume === 0 || youtubeMuted) {
-        event.target.mute();
-      } else {
-        event.target.unMute();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      if (youtubeVolume === 0 || youtubeMuted) event.target.mute();
+      else event.target.unMute();
+    } catch (error) { console.log(error); }
   };
 
-  if (!lofi) return <div>Loading...</div>;
+  if (!lofi) return (
+    <div className="w-full h-screen bg-gray-900 flex items-center justify-center">
+      <div className="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+    </div>
+  );
 
   const isYouTubeVideo = !!lofi.videoUrl;
   const videoId = isYouTubeVideo ? getYouTubeId(lofi.videoUrl) : null;
 
   return (
-    <main 
+    <main
       className="relative w-full h-screen bg-gray-900 overflow-hidden"
       onClick={handleUserInteraction}
       onTouchStart={handleUserInteraction}
     >
+      {/* Background video / image */}
       {isYouTubeVideo && videoId ? (
         <>
           <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center">
@@ -238,19 +249,16 @@ export default function LofiDetail() {
         </>
       )}
 
-      <div className="relative z-20 max-w-lg mx-auto p-6 text-white">
-        <div className="">
-          <div className="text-white/70 text-sm mb-2">NOW PLAYING</div>
+      {/* Now Playing title */}
+      <div className="relative z-20 max-w-lg mx-auto px-4 pt-4 sm:pt-6 text-white">
+        <div>
+          <div className="text-white/70 text-xs mb-1">NOW PLAYING</div>
           <h1 className="text-sm shadow-xl border-gray-800 rounded text-center font-bold text-white bg-black/30 py-2 px-3 border border-white/20">
             {lofi.title}
           </h1>
         </div>
         {lofi.audioUrl && (
-          <audio
-            ref={audioRef}
-            autoPlay
-            loop
-            muted={audioMuted}
+          <audio ref={audioRef} autoPlay loop muted={audioMuted}
             onCanPlay={() => {
               if (audioRef.current) {
                 audioRef.current.volume = audioVolume / 100;
@@ -258,100 +266,93 @@ export default function LofiDetail() {
               }
             }}
           >
-            <source src={lofi.audioUrl} type="audio/mp3"/>
+            <source src={lofi.audioUrl} type="audio/mp3" />
           </audio>
         )}
-        <audio 
-          ref={rainAudioRef} 
-          loop
-          muted={rainMuted}
-          onCanPlay={() => {
-            if(rainAudioRef.current){
-              rainAudioRef.current.volume = rainVolume / 100;
-            }
-          }}
-        >
+        <audio ref={rainAudioRef} loop muted={rainMuted}
+          onCanPlay={() => { if (rainAudioRef.current) rainAudioRef.current.volume = rainVolume / 100; }}>
           <source src={rainSound} type="audio/mp3" />
         </audio>
-        <audio 
-          ref={streetAudioRef} 
-          loop
-          muted={streetMuted}
-          onCanPlay={() => {
-            if(streetAudioRef.current){
-              streetAudioRef.current.volume = streetVolume / 100;
-            }
-          }}
-        >
+        <audio ref={streetAudioRef} loop muted={streetMuted}
+          onCanPlay={() => { if (streetAudioRef.current) streetAudioRef.current.volume = streetVolume / 100; }}>
           <source src={streetSound} type="audio/mp3" />
         </audio>
-        <audio 
-          ref={cafeAudioRef} 
-          loop
-          muted={cafeMuted}
-          onCanPlay={() => {
-            if(cafeAudioRef.current){
-              cafeAudioRef.current.volume = cafeVolume / 100;
-            }
-          }}
-        >
+        <audio ref={cafeAudioRef} loop muted={cafeMuted}
+          onCanPlay={() => { if (cafeAudioRef.current) cafeAudioRef.current.volume = cafeVolume / 100; }}>
           <source src={cafeSound} type="audio/mp3" />
         </audio>
       </div>
-      <div className="absolute top-4 left-4 z-30 bg-black/50 backdrop-blur-md rounded-xl text-white flex flex-col items-center gap-2">
-        <button className={`group relative w-14 h-14 backdrop-blur-xl rounded border border-white/20 shadow-2xl transition-all flex items-center justify-center
-        ${panelOpen
-          ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20"
-          : "bg-white/10 hover:bg-white/20"}
-      `} onClick={handleTogglePanel}>
-          <FaVolumeHigh  className="w-5 h-5 text-white" />
+
+      {/* ─── DESKTOP: Sol üst toolbar ─── */}
+      <div className="hidden lg:flex absolute top-4 left-4 z-30 bg-black/50 backdrop-blur-md rounded-xl text-white flex-col items-center gap-2">
+        <button
+          className={`group relative w-14 h-14 backdrop-blur-xl rounded border border-white/20 shadow-2xl transition-all flex items-center justify-center
+            ${panelOpen ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : "bg-white/10 hover:bg-white/20"}`}
+          onClick={handleTogglePanel}
+        >
+          <FaVolumeHigh className="w-5 h-5 text-white" />
           <div className="absolute left-full ml-3 px-3 py-1.5 bg-black/80 backdrop-blur-sm rounded-lg text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Sound Mixer
           </div>
         </button>
-
-        <button className={`group relative w-14 h-14 backdrop-blur-xl rounded border border-white/20 shadow-2xl transition-all flex items-center justify-center
-          ${timerPanelOpen
-            ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20"
-            : "bg-white/10 hover:bg-white/20"}
-        `} onClick={() => setTimerPanelOpen(!timerPanelOpen)}>
-        <TfiTimer className="w-5 h-5 text-white" />
-        <div className="absolute left-full ml-3 px-3 py-1.5 bg-black/80 backdrop-blur-sm rounded-lg text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <button
+          className={`group relative w-14 h-14 backdrop-blur-xl rounded border border-white/20 shadow-2xl transition-all flex items-center justify-center
+            ${timerPanelOpen ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : "bg-white/10 hover:bg-white/20"}`}
+          onClick={handleToggleTimer}
+        >
+          <TfiTimer className="w-5 h-5 text-white" />
+          <div className="absolute left-full ml-3 px-3 py-1.5 bg-black/80 backdrop-blur-sm rounded-lg text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Timer
           </div>
         </button>
-
       </div>
 
+      {/* ─── MOBİL: Alt toolbar (landscape → daha küçük) ─── */}
+      <div className={`lg:hidden absolute z-30 flex items-center gap-3 ${isLandscape
+        ? "right-4 top-1/2 -translate-y-1/2 flex-col"
+        : "bottom-6 left-1/2 -translate-x-1/2 flex-row"
+        }`}>
+        <button
+          className={`w-12 h-12 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl transition-all flex items-center justify-center
+            ${panelOpen ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30" : "bg-black/40 hover:bg-black/60"}`}
+          onClick={handleTogglePanel}
+        >
+          <FaVolumeHigh className="w-5 h-5 text-white" />
+        </button>
+        <button
+          className={`w-12 h-12 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl transition-all flex items-center justify-center
+            ${timerPanelOpen ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30" : "bg-black/40 hover:bg-black/60"}`}
+          onClick={handleToggleTimer}
+        >
+          <TfiTimer className="w-5 h-5 text-white" />
+        </button>
+        <button
+          className={`w-12 h-12 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl transition-all flex items-center justify-center
+            ${chatPanelOpen ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30" : "bg-black/40 hover:bg-black/60"}`}
+          onClick={handleToggleChat}
+        >
+          <MessageCircle className="w-5 h-5 text-white" />
+        </button>
+      </div>
+
+      {/* Panels */}
       <SoundPanel
         panelOpen={panelOpen}
         isYouTubeVideo={isYouTubeVideo}
-        youtubeMuted={youtubeMuted}
-        setYoutubeMuted={setYoutubeMuted}
-        youtubeVolume={youtubeVolume}
-        setYoutubeVolume={setYoutubeVolume}
-        audioMuted={audioMuted}
-        setAudioMuted={setAudioMuted}
-        audioVolume={audioVolume}
-        setAudioVolume={setAudioVolume}
-        rainMuted={rainMuted}
-        setRainMuted={setRainMuted}
-        rainVolume={rainVolume}
-        setRainVolume={setRainVolume}
-        cafeMuted={cafeMuted}
-        setCafeMuted={setCafeMuted}
-        cafeVolume={cafeVolume}
-        setCafeVolume={setCafeVolume}
-        streetMuted={streetMuted}
-        setStreetMuted={setStreetMuted}
-        streetVolume={streetVolume}
-        setStreetVolume={setStreetVolume}
+        youtubeMuted={youtubeMuted} setYoutubeMuted={setYoutubeMuted}
+        youtubeVolume={youtubeVolume} setYoutubeVolume={setYoutubeVolume}
+        audioMuted={audioMuted} setAudioMuted={setAudioMuted}
+        audioVolume={audioVolume} setAudioVolume={setAudioVolume}
+        rainMuted={rainMuted} setRainMuted={setRainMuted}
+        rainVolume={rainVolume} setRainVolume={setRainVolume}
+        cafeMuted={cafeMuted} setCafeMuted={setCafeMuted}
+        cafeVolume={cafeVolume} setCafeVolume={setCafeVolume}
+        streetMuted={streetMuted} setStreetMuted={setStreetMuted}
+        streetVolume={streetVolume} setStreetVolume={setStreetVolume}
         handleVolumeChange={handleVolumeChange}
         youtubePlayerRef={youtubePlayerRef}
-        audioRef={audioRef}
-        rainAudioRef={rainAudioRef}
-        cafeAudioRef={cafeAudioRef}
-        streetAudioRef={streetAudioRef}
+        audioRef={audioRef} rainAudioRef={rainAudioRef}
+        cafeAudioRef={cafeAudioRef} streetAudioRef={streetAudioRef}
         onClose={() => setPanelOpen(false)}
       />
 
@@ -360,19 +361,17 @@ export default function LofiDetail() {
         onClose={() => setTimerPanelOpen(false)}
       />
 
-      <ChatWindow 
+      <ChatWindow
         panelOpen={chatPanelOpen}
         onClose={() => setChatPanelOpen(false)}
       />
 
-      <div className="absolute bottom-6 right-6 z-30">
+      {/* Desktop chat button (sağ alt) */}
+      <div className="hidden lg:block absolute bottom-6 right-6 z-30">
         <button
           onClick={() => setChatPanelOpen(!chatPanelOpen)}
           className={`group relative w-14 h-14 backdrop-blur-xl rounded border border-white/20 shadow-2xl transition-all flex items-center justify-center
-          ${chatPanelOpen
-            ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20"
-            : "bg-white/10 hover:bg-white/20"}
-        `}
+            ${chatPanelOpen ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : "bg-white/10 hover:bg-white/20"}`}
         >
           <MessageCircle className="w-5 h-5 text-white" />
         </button>
