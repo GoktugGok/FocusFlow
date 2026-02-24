@@ -264,47 +264,62 @@ export default function LofiDetail() {
       {/* ── Background ── */}
       {isYouTubeVideo && videoId ? (
         <>
-          <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center">
+          <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center pointer-events-none">
             <YouTube
               videoId={videoId}
               opts={{
                 playerVars: {
-                  autoplay: isSafari ? 0 : 1,
+                  autoplay: 1,
                   mute: 1,
                   controls: 0,
                   modestbranding: 1,
                   loop: 1,
                   playlist: videoId,
                   playsinline: 1,
+                  rel: 0,
+                  showinfo: 0,
+                  iv_load_policy: 3
                 },
               }}
               onReady={handleYouTubeReady}
               onError={(e) => console.log(e)}
               className="w-full h-full"
-              iframeClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto"
+              iframeClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto scale-[1.3] pointer-events-none"
             />
           </div>
-          <div className="absolute inset-0 bg-black/50 z-10" />
+          <div className="absolute inset-0 bg-slate-950/40 z-10 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 z-10" />
         </>
       ) : (
         <>
           <img src={lofi.coverImg} alt={lofi.title} className="absolute inset-0 w-full h-full object-cover z-0" />
-          <div className="absolute inset-0 bg-black/50 z-10" />
+          <div className="absolute inset-0 bg-slate-950/40 z-10 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 z-10" />
         </>
       )}
 
       {/* ── Now Playing ── */}
-      <div className="relative z-20 max-w-lg mx-auto px-4 pt-4 sm:pt-6 text-white">
-        <div className="text-white/60 text-xs mb-1 tracking-widest">NOW PLAYING</div>
-        <h1 className="text-sm text-center font-semibold text-white bg-black/30 backdrop-blur-sm py-2 px-4 rounded-xl border border-white/15 shadow-lg">
-          {lofi.title}
-        </h1>
+      <div className="relative z-20 max-w-2xl mx-auto px-6 pt-8 sm:pt-12 text-white">
+        <div className="flex flex-col items-center">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+            <div className="text-white/40 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase">Now Playing</div>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-center text-white tracking-tight drop-shadow-2xl">
+            {lofi.title}
+          </h1>
+          <div className="mt-4 w-12 h-1 bg-gradient-to-r from-emerald-500 to-sky-500 rounded-full opacity-50" />
+        </div>
 
         {/* Safari'de video başlatma ipucu */}
         {isSafari && !userInteraction && (
-          <p className="text-center text-white/50 text-xs mt-2 animate-pulse">
-            Başlatmak için ekrana dokun 👆
-          </p>
+          <div className="flex flex-col items-center mt-8 animate-bounce">
+            <div className="px-6 py-3 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-2xl">
+              <p className="text-center text-white text-xs font-black uppercase tracking-[0.2em]">
+                Tap to Start Focus 🎧
+              </p>
+            </div>
+          </div>
         )}
 
         {/* Audio elements */}
@@ -359,44 +374,44 @@ export default function LofiDetail() {
 
       {/* ── MOBİL: FIXED bottom nav (her zaman görünür) ── */}
       <div
-        className={`lg:hidden fixed bottom-0 left-0 right-0 z-30 ${isLandscape
-            ? "hidden" // landscape'te gizle, yerine sağ kenar toolbar
-            : ""
-          }`}
+        className={`lg:hidden fixed bottom-0 left-0 right-0 z-30 transition-transform duration-500 ${isLandscape ? "translate-y-full" : "translate-y-0"}`}
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
-        <div className="mx-4 mb-4 bg-black/60 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl flex items-center justify-around py-3 px-2">
+        <div className="mx-6 mb-6 bg-slate-900/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-around py-4 px-2">
           <button
             onClick={handleTogglePanel}
-            className="flex flex-col items-center gap-1 px-4 group"
+            className="flex flex-col items-center gap-1.5 px-4 relative"
           >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${panelOpen ? "bg-gradient-to-br from-purple-500/40 to-pink-500/40 border border-purple-400/50" : "bg-white/10"
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${panelOpen ? "bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg shadow-emerald-500/40" : "bg-white/5 hover:bg-white/10"
               }`}>
-              <FaVolumeHigh className="w-5 h-5 text-white" />
+              <FaVolumeHigh className={`w-5 h-5 transition-colors ${panelOpen ? "text-white" : "text-white/60"}`} />
             </div>
-            <span className={`text-xs transition-colors ${panelOpen ? "text-purple-300" : "text-white/50"}`}>Ses</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${panelOpen ? "text-emerald-400" : "text-white/30"}`}>Mixer</span>
+            {panelOpen && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-emerald-400" />}
           </button>
 
           <button
             onClick={handleToggleTimer}
-            className="flex flex-col items-center gap-1 px-4 group"
+            className="flex flex-col items-center gap-1.5 px-4 relative"
           >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${timerPanelOpen ? "bg-gradient-to-br from-purple-500/40 to-pink-500/40 border border-purple-400/50" : "bg-white/10"
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${timerPanelOpen ? "bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg shadow-emerald-500/40" : "bg-white/5 hover:bg-white/10"
               }`}>
-              <TfiTimer className="w-5 h-5 text-white" />
+              <TfiTimer className={`w-5 h-5 transition-colors ${timerPanelOpen ? "text-white" : "text-white/60"}`} />
             </div>
-            <span className={`text-xs transition-colors ${timerPanelOpen ? "text-purple-300" : "text-white/50"}`}>Timer</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${timerPanelOpen ? "text-emerald-400" : "text-white/30"}`}>Timer</span>
+            {timerPanelOpen && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-emerald-400" />}
           </button>
 
           <button
             onClick={handleToggleChat}
-            className="flex flex-col items-center gap-1 px-4 group"
+            className="flex flex-col items-center gap-1.5 px-4 relative"
           >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${chatPanelOpen ? "bg-gradient-to-br from-purple-500/40 to-pink-500/40 border border-purple-400/50" : "bg-white/10"
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${chatPanelOpen ? "bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg shadow-emerald-500/40" : "bg-white/5 hover:bg-white/10"
               }`}>
-              <MessageCircle className="w-5 h-5 text-white" />
+              <MessageCircle className={`w-5 h-5 transition-colors ${chatPanelOpen ? "text-white" : "text-white/60"}`} />
             </div>
-            <span className={`text-xs transition-colors ${chatPanelOpen ? "text-purple-300" : "text-white/50"}`}>Chat</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${chatPanelOpen ? "text-emerald-400" : "text-white/30"}`}>Chat</span>
+            {chatPanelOpen && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-emerald-400" />}
           </button>
         </div>
       </div>
