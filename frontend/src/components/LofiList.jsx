@@ -64,8 +64,8 @@ export default function LofiList({ search, category }) {  // ✅ 1. category pro
       return false;
     }
 
-    // Kategori filtresi (All değilse)
-    if (category && category !== "All" && lofi.category !== category) {
+    // Kategori filtresi (All değilse) — case-insensitive
+    if (category && category !== "All" && lofi.category?.toLowerCase() !== category.toLowerCase()) {
       return false;
     }
 
