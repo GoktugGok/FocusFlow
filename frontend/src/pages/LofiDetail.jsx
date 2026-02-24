@@ -264,7 +264,7 @@ export default function LofiDetail() {
       {/* ── Background ── */}
       {isYouTubeVideo && videoId ? (
         <>
-          <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center pointer-events-none">
+          <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center">
             <YouTube
               videoId={videoId}
               opts={{
@@ -284,17 +284,17 @@ export default function LofiDetail() {
               onReady={handleYouTubeReady}
               onError={(e) => console.log(e)}
               className="w-full h-full"
-              iframeClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto scale-[1.3] pointer-events-none"
+              iframeClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto pointer-events-none"
             />
           </div>
-          <div className="absolute inset-0 bg-slate-950/40 z-10 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 z-10" />
+          <div className="absolute inset-0 bg-black/40 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 z-10" />
         </>
       ) : (
         <>
           <img src={lofi.coverImg} alt={lofi.title} className="absolute inset-0 w-full h-full object-cover z-0" />
-          <div className="absolute inset-0 bg-slate-950/40 z-10 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 z-10" />
+          <div className="absolute inset-0 bg-black/40 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 z-10" />
         </>
       )}
 
@@ -314,7 +314,7 @@ export default function LofiDetail() {
         {/* Safari'de video başlatma ipucu */}
         {isSafari && !userInteraction && (
           <div className="flex flex-col items-center mt-8 animate-bounce">
-            <div className="px-6 py-3 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-2xl">
+            <div className="px-6 py-3 bg-black/60 rounded-full border border-white/20 shadow-2xl">
               <p className="text-center text-white text-xs font-black uppercase tracking-[0.2em]">
                 Tap to Start Focus 🎧
               </p>
