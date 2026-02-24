@@ -4,47 +4,36 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 /* ─── Tek ses satırı bileşeni ─── */
-function VolumeRow({ label, emoji, colorFrom, colorTo, borderColor, iconColor, muted, volume, onMute, onUnmute, onChange, iosNoSlider }) {
+function VolumeRow({ label, emoji, colorFrom, colorTo, borderColor, iconColor, muted, volume, onMute, onUnmute, onChange }) {
   return (
-    <div className="bg-white/10 rounded-xl p-4 border border-white/10 transition-colors">
-      <div className="flex items-center justify-between mb-3 text-white">
+    <div className="bg-white/5 rounded-xl p-3 border border-white/10">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <button
-            className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all active:scale-90 bg-white/10 hover:bg-white/20`}
+            className={`w-7 h-7 rounded-lg bg-gradient-to-br ${colorFrom} ${colorTo} flex items-center justify-center border ${borderColor} transition-all`}
             onClick={muted ? onUnmute : onMute}
           >
             {muted
-              ? <FaVolumeXmark className="w-4 h-4 text-white/40" />
-              : <FaVolumeHigh className="w-4 h-4 text-white" />}
+              ? <FaVolumeXmark className={`w-3 h-3 ${iconColor}`} />
+              : <FaVolumeHigh className={`w-3 h-3 ${iconColor}`} />}
           </button>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              {emoji && <span className="text-lg">{emoji}</span>}
-              <span className="font-semibold text-sm">{label}</span>
-            </div>
-          </div>
+          {emoji && <span className="text-lg">{emoji}</span>}
+          <span className="text-white text-sm">{label}</span>
         </div>
-        <div className="text-xs font-medium opacity-50 tabular-nums">{volume}%</div>
+        <span className="text-white/50 text-xs tabular-nums">{volume}%</span>
       </div>
 
-      {iosNoSlider ? (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={muted ? onUnmute : onMute}
-            className={`w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all active:scale-95 ${muted
-              ? "bg-white/5 text-white/30 border border-white/10"
-              : "bg-emerald-500/80 text-white shadow-lg shadow-emerald-500/20"}`}
-          >
-            {muted ? "SESİ AÇ" : "SESİ KAPAT"}
-          </button>
-        </div>
-      ) : (
-        <input
-          type="range" min="0" max="100" value={volume}
-          onChange={onChange}
-          className="w-full h-1.5 bg-white/20 rounded-full cursor-pointer accent-white appearance-none hover:bg-white/30 transition-all"
-        />
-      )}
+      <input
+        type="range" min="0" max="100" value={volume}
+        onChange={onChange}
+        className="w-full h-2 bg-white/20 rounded-full cursor-pointer accent-white
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+          [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:shadow-md
+          focus:outline-none"
+        style={{ WebkitAppearance: "none", outline: "none", borderRadius: "9999px" }}
+      />
     </div>
   );
 }
@@ -78,7 +67,7 @@ export default function SoundPanel({
       {/* Başlık */}
       <div className="flex items-center justify-between pb-3 border-b border-white/15 mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500/30 to-sky-500/30 flex items-center justify-center border border-white/20">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center border border-white/20">
             <FaVolumeHigh className="w-4 h-4 text-white" />
           </div>
           <span className="text-white font-medium text-sm">Sound Mixer</span>
@@ -94,31 +83,31 @@ export default function SoundPanel({
         {/* YouTube / Audio */}
         {isYouTubeVideo ? (
           <VolumeRow
-            label="YouTube" iosNoSlider={isIOS}
-            colorFrom="from-sky-500/40" colorTo="to-emerald-500/40"
-            borderColor="border-sky-400/30" iconColor="text-sky-300"
+            label="YouTube"
+            colorFrom="from-purple-500/30" colorTo="to-pink-500/30"
+            borderColor="border-purple-400/30" iconColor="text-purple-300"
             muted={youtubeMuted} volume={youtubeVolume}
             onMute={() => handleVolumeChange(youtubePlayerRef, 0, setYoutubeVolume, setYoutubeMuted, "youtubeVolume")}
             onUnmute={() => handleVolumeChange(youtubePlayerRef, 100, setYoutubeVolume, setYoutubeMuted, "youtubeVolume")}
-            onChange={(e) => setYoutubeVolume(Number(e.target.value))}
+            onChange={(e) => handleVolumeChange(youtubePlayerRef, Number(e.target.value), setYoutubeVolume, setYoutubeMuted, "youtubeVolume")}
           />
         ) : (
           <VolumeRow
             label="Audio"
-            colorFrom="from-sky-500/40" colorTo="to-emerald-500/40"
-            borderColor="border-sky-400/30" iconColor="text-sky-300"
+            colorFrom="from-purple-500/30" colorTo="to-pink-500/30"
+            borderColor="border-purple-400/30" iconColor="text-purple-300"
             muted={audioMuted} volume={audioVolume}
             onMute={() => handleVolumeChange(audioRef, 0, setAudioVolume, setAudioMuted, "audioVolume")}
             onUnmute={() => handleVolumeChange(audioRef, 100, setAudioVolume, setAudioMuted, "audioVolume")}
-            onChange={(e) => setAudioVolume(Number(e.target.value))}
+            onChange={(e) => handleVolumeChange(audioRef, Number(e.target.value), setAudioVolume, setAudioMuted, "audioVolume")}
           />
         )}
 
-        <div className="text-white/30 text-[10px] uppercase font-bold tracking-widest px-1 pt-4 pb-1">Ambient Sounds</div>
+        <div className="text-white/40 text-xs px-1 pt-1">Ambient Sounds</div>
 
         <VolumeRow
           label="Street" emoji="🚗"
-          colorFrom="from-orange-500/40" colorTo="to-amber-500/40"
+          colorFrom="from-orange-500/30" colorTo="to-red-500/30"
           borderColor="border-orange-400/30" iconColor="text-orange-300"
           muted={streetMuted} volume={streetVolume}
           onMute={() => handleVolumeChange(streetAudioRef, 0, setStreetVolume, setStreetMuted, "streetVolume")}
@@ -127,7 +116,7 @@ export default function SoundPanel({
         />
         <VolumeRow
           label="Rain" emoji="🌧️"
-          colorFrom="from-blue-500/40" colorTo="to-cyan-500/40"
+          colorFrom="from-blue-500/30" colorTo="to-cyan-500/30"
           borderColor="border-blue-400/30" iconColor="text-blue-300"
           muted={rainMuted} volume={rainVolume}
           onMute={() => handleVolumeChange(rainAudioRef, 0, setRainVolume, setRainMuted, "rainVolume")}
@@ -136,8 +125,8 @@ export default function SoundPanel({
         />
         <VolumeRow
           label="Cafe" emoji="☕"
-          colorFrom="from-emerald-500/40" colorTo="to-teal-500/40"
-          borderColor="border-emerald-400/30" iconColor="text-emerald-300"
+          colorFrom="from-amber-500/30" colorTo="to-yellow-500/30"
+          borderColor="border-amber-400/30" iconColor="text-amber-300"
           muted={cafeMuted} volume={cafeVolume}
           onMute={() => handleVolumeChange(cafeAudioRef, 0, setCafeVolume, setCafeMuted, "cafeVolume")}
           onUnmute={() => handleVolumeChange(cafeAudioRef, 100, setCafeVolume, setCafeMuted, "cafeVolume")}
