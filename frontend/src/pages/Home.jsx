@@ -123,7 +123,7 @@ export default function Home() {
         <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar relative pt-[68px]">
 
           {/* ── HERO BANNER CAROUSEL ── */}
-          <div className="relative w-full h-[55vh] md:h-[60vh] flex flex-col justify-end group mt-4 px-4 md:px-8 max-w-[1800px] mx-auto">
+          <div className="relative w-full h-[55vh] md:h-[60vh] flex flex-col justify-end group mt-12 px-4 md:px-8 max-w-[1800px] mx-auto">
             {heroLofi ? (
               <div className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl shadow-black/50 cursor-pointer" onClick={() => navigate(`/${heroLofi._id}`)}>
 
@@ -135,6 +135,11 @@ export default function Home() {
                     className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-in-out group-hover:scale-[1.02] ${idx === heroIndex ? "opacity-100 z-0" : "opacity-0 scale-105 -z-10"
                       }`}
                     alt="Hero Background"
+                    onError={(e) => {
+                      if (e.target.src.includes('maxresdefault.jpg')) {
+                        e.target.src = e.target.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                      }
+                    }}
                   />
                 ))}
 

@@ -12,7 +12,7 @@ export const getYouTubeVideoId = (url) => {
 const getYouTubeThumbnail = (url) => {
   const videoId = getYouTubeVideoId(url);
   if (!videoId) return null;
-  return `https://img.youtube.com/vi/${videoId}/0.jpg`;
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 };
 
 // Kapak resmi URL'sini belirleme
@@ -66,7 +66,13 @@ export default function LofiList({ search, category, lofies = [] }) {
                   src={coverImage}
                   alt={lofi.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
-                  onError={(e) => { e.target.src = "/default-cover.jpg"; }}
+                  onError={(e) => {
+                    if (e.target.src.includes('maxresdefault.jpg')) {
+                      e.target.src = e.target.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                    } else {
+                      e.target.src = "/default-cover.jpg";
+                    }
+                  }}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-900 to-slate-900 group-hover:scale-105 transition-transform duration-500">
