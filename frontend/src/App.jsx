@@ -8,13 +8,13 @@ import LofiDetail from "./pages/LofiDetail.jsx";
 import LoginPage from "./pages/Login.jsx";
 
 const API = import.meta.env.VITE_API_URL;
-const socket = io("https://focusflow-7znc.onrender.com");
+const socket = io("https://focussflow.up.railway.app");
 
 export default function App() {
   useEffect(() => {
     socket.on("connect", () => {
       console.log("🟢 Connected to backend: ", socket.id);
-      
+
       const fakeUserId = "testuser@example.com";
       socket.emit("user-online", fakeUserId);
     });
@@ -29,11 +29,11 @@ export default function App() {
   }, []);
   return (
     <BrowserRouter>
-          <Routes>
-            <Route path="/:id" element={<LofiDetail />}/>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginPage/>}/>
-          </Routes>
+      <Routes>
+        <Route path="/:id" element={<LofiDetail />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -5,7 +5,7 @@ import { Search, Play, Mic, Bell, AudioLines } from "lucide-react";
 import { io } from "socket.io-client";
 import LofiList, { getCoverImage } from "../components/LofiList";
 
-const socket = io("https://focusflow-7znc.onrender.com");
+const socket = io("https://focussflow.up.railway.app");
 const categories = ["All", "Cafe", "Night", "Rain", "Study"];
 const categoryIcons = { All: "🎵", Cafe: "☕", Night: "🌙", Rain: "🌧️", Study: "📚" };
 
@@ -30,7 +30,7 @@ export default function Home() {
   useEffect(() => {
     checkUserStatus();
 
-    fetch(`https://focusflow-7znc.onrender.com/lofis`)
+    fetch(`https://focussflow.up.railway.app/lofis`)
       .then((res) => res.json())
       .then((data) => {
         // Doğrudan kendi backend verilerini yüklüyoruz.
@@ -53,7 +53,7 @@ export default function Home() {
     const token = localStorage.getItem('lofi_token');
     if (!token) return;
     try {
-      const response = await fetch(`https://focusflow-7znc.onrender.com/api/users/me`, {
+      const response = await fetch(`https://focussflow.up.railway.app/api/users/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {

@@ -98,7 +98,7 @@ export default function LofiDetail() {
   };
 
   useEffect(() => {
-    fetch(`https://focusflow-7znc.onrender.com/lofis/${id}`)
+    fetch(`https://focussflow.up.railway.app/lofis/${id}`)
       .then((res) => res.json())
       .then((data) => setLofi(data))
       .catch((err) => console.log(err));

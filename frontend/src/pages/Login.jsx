@@ -11,34 +11,34 @@ export default function AuthPage({ onLogin }) {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
-   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-        const res = await fetch(`https://focusflow-7znc.onrender.com/users/login`, {
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify({
-                email: loginEmail,
-                password: loginPassword,
-            }),
-        });
+      const res = await fetch(`https://focussflow.up.railway.app/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: loginEmail,
+          password: loginPassword,
+        }),
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if(!res.ok){
-            alert(data.message || "Login failed!");
-            return;
-        }
+      if (!res.ok) {
+        alert(data.message || "Login failed!");
+        return;
+      }
 
-        console.log("Login success:", data.user);
+      console.log("Login success:", data.user);
 
-        localStorage.setItem('lofi_token', data.token);
+      localStorage.setItem('lofi_token', data.token);
 
-         navigate('/');
+      navigate('/');
     } catch (err) {
       console.error("Login error:", err);
       alert("Server connection error!");
@@ -57,7 +57,7 @@ export default function AuthPage({ onLogin }) {
     setIsLoading(true);
 
     try {
-      const res = await fetch("https://focusflow-7znc.onrender.com/users/register", {
+      const res = await fetch("https://focussflow.up.railway.app/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -119,21 +119,19 @@ export default function AuthPage({ onLogin }) {
           <div className="flex gap-2 p-1 bg-white/5 rounded-xl mb-6">
             <button
               onClick={() => setActiveTab("login")}
-              className={`flex-1 py-2 px-4 rounded transition-all ${
-                activeTab === "login"
+              className={`flex-1 py-2 px-4 rounded transition-all ${activeTab === "login"
                   ? "bg-white/20 text-white shadow-lg"
                   : "text-white/60 hover:text-white/80"
-              }`}
+                }`}
             >
               Login
             </button>
             <button
               onClick={() => setActiveTab("register")}
-              className={`flex-1 py-2 px-4 rounded transition-all ${
-                activeTab === "register"
+              className={`flex-1 py-2 px-4 rounded transition-all ${activeTab === "register"
                   ? "bg-white/20 text-white shadow-lg"
                   : "text-white/60 hover:text-white/80"
-              }`}
+                }`}
             >
               Register
             </button>
