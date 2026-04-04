@@ -21,7 +21,7 @@ const io = new Server(server, {
   }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 connectDB();
@@ -30,7 +30,7 @@ app.use("/api/users", userRouter);
 
 // Bütün lofi routes’e io ekleyelim
 app.use("/lofis", (req, res, next) => {
-  req.io = io; 
+  req.io = io;
   next();
 }, lofiRouter);
 
@@ -43,14 +43,14 @@ io.on("connection", (socket) => {
 
   socket.on("user-online", (userId) => {
     onlineUsers[userId] = socket.id;
-    console.log("Online users:", Object.keys(onlineUsers)); 
+    console.log("Online users:", Object.keys(onlineUsers));
   });
 
   socket.on("disconnect", () => {
     const userId = Object.keys(onlineUsers).find(key => onlineUsers[key] === socket.id);
     if (userId) delete onlineUsers[userId];
     console.log("User disconnected:", socket.id);
-    console.log("Online users now:", Object.keys(onlineUsers)); 
+    console.log("Online users now:", Object.keys(onlineUsers));
   });
 });
 
