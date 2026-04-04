@@ -8,13 +8,17 @@ import cors from "cors";
 import userRouter from "./src/routes/user.js";
 import lofiRouter from "./src/routes/lofiRoutes.js";
 import connectDB from "./src/routes/db.js";
-import { on } from "events";
+
+// ✅ dotenv'i EN BAŞTA yükle — aksi hâlde Railway'de env değişkenleri okunamaz
+dotenv.config();
+
+const FRONTEND_URL = process.env.FRONTEND_URL || "https://focus-flow-ruddy-two.vercel.app";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://focus-flow-ruddy-two.vercel.app",
+    origin: FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
@@ -25,7 +29,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 connectDB();
-app.use(cors({ origin: "https://focus-flow-ruddy-two.vercel.app" }));
+app.use(cors({
+  origin: FRONTEND_URL,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use("/api/users", userRouter);
 
 // Bütün lofi routes’e io ekleyelim
