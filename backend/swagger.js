@@ -1,6 +1,11 @@
 // swagger.js
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const options = {
   definition: {
@@ -30,9 +35,8 @@ const options = {
     }]
   },
   apis: [
-    "index.js",
-    "./src/routes/*.js",
-    "src/routes/*.js"
+    path.join(__dirname, "index.js"),
+    path.join(__dirname, "src/routes/*.js"),
   ],
 };
 
