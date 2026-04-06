@@ -10,6 +10,11 @@ const options = {
       version: "1.0.0",
       description: "LofiLife API endpoints",
     },
+    servers: [
+      {
+        url: "https://focussflow.up.railway.app",
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
