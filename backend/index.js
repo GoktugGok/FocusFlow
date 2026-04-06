@@ -23,7 +23,7 @@ const io = new Server(server, {
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
   },
-  transports: ['websocket', 'polling'], // Railway için ikisini de eklemek daha garantidir
+  transports: ['websocket', 'polling'],
   allowEIO3: true
 });
 
