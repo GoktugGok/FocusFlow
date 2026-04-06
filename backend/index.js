@@ -22,7 +22,9 @@ const io = new Server(server, {
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
-  }
+  },
+  transports: ['websocket', 'polling'], // Railway için ikisini de eklemek daha garantidir
+  allowEIO3: true
 });
 
 const PORT = process.env.PORT || 8080;
