@@ -25,15 +25,16 @@ const io = new Server(server, {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 connectDB();
 app.use(cors({
   origin: FRONTEND_URL,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200
 }));
 app.use("/api/users", userRouter);
 
@@ -64,5 +65,7 @@ io.on("connection", (socket) => {
 });
 
 swaggerDocs(app);
-server.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Backend is live on port ${PORT} and accessible to the world!`);
+});
 
